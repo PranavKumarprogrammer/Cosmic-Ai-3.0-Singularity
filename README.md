@@ -12,3 +12,5 @@ A singularity marks the point where systems transcend limits. Cosmic AI 3.0 embo
 
 Designed for impact
 From everyday assistance to complex workflows, Cosmic AI 3.0 | Singularity is built to adapt, respond, and grow with its users.
+
+Website :-  https://cosmic-ai.42web.io/
