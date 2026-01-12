@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic AI 3.0 | Singularity Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Space+Grotesk:wght@300..700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #020617;
+            --bg-void: #030712;
+            --accent-primary: #2563EB;
+            --accent-glow: rgba(37, 99, 235, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --font-heading: 'Space Grotesk', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: #f8fafc;
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Premium Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-void); }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-primary); }
+
+        /* Starfield Background */
+        .stars-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -2;
+            background: #020617;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: twinkle var(--duration) infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Cinematic Nebula */
+        .nebula-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background: radial-gradient(circle at 50% 50%, #0c1530 0%, #020617 100%);
+        }
+
+        .nebula-glow {
+            position: absolute;
+            width: 80vw; height: 80vh;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.12) 0%, transparent 70%);
+            filter: blur(80px);
+            animation: drift 20s infinite alternate ease-in-out;
+        }
+
+        @keyframes drift {
+            from { transform: translate(-10%, -10%) scale(1); }
+            to { transform: translate(10%, 10%) scale(1.1); }
+        }
+
+        #aura {
+            position: fixed;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: screen;
+            transition: width 0.3s, height 0.3s;
+        }
+
+        /* Nav & Layout */
+        .nav-container {
+            position: fixed;
+            top: 24px; left: 50%;
+            transform: translateX(-50%);
+            width: 95%;
+            max-width: 1200px;
+            z-index: 1000;
+        }
+
+        .nav-float {
+            background: rgba(3, 7, 18, 0.75);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            padding: 10px 16px;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .nav-link {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #94a3b8;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            padding: 8px 18px;
+            border-radius: 50px;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover { color: #fff; background: rgba(255,255,255,0.05); transform: translateY(-1px); }
+        .nav-link.active { color: #fff; background: rgba(37, 99, 235, 0.2); border: 1px solid rgba(37, 99, 235, 0.3); }
+
+        .heading-xl { font-family: var(--font-heading); letter-spacing: -0.04em; }
+        .text-gradient {
+            background: linear-gradient(135deg, #fff 0%, #60a5fa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 30px rgba(37, 99, 235, 0.3));
+        }
+
+        .page-view {
+            display: none;
+            min-height: 100vh;
+            animation: pageEnter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .page-view.active { display: block; }
+
+        @keyframes pageEnter {
+            from { opacity: 0; transform: scale(0.98) translateY(20px); filter: blur(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+        }
+
+        /* Cards & UI */
+        .feature-card {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 32px;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        .feature-card:hover {
+            border-color: rgba(37, 99, 235, 0.5);
+            background: rgba(37, 99, 235, 0.05);
+            transform: translateY(-10px) rotateX(2deg);
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.5), 0 18px 36px -18px rgba(37, 99, 235, 0.3);
+        }
+
+        .pricing-card-premium {
+            background: linear-gradient(180deg, rgba(37, 99, 235, 0.1) 0%, rgba(3, 7, 18, 0.4) 100%);
+            border: 1px solid rgba(37, 99, 235, 0.4);
+            box-shadow: 0 0 40px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+            color: white;
+            padding: 14px 32px;
+            border-radius: 100px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+        .btn-primary:hover::after { transform: translateX(100%); }
+        .btn-primary:hover {
+            box-shadow: 0 0 30px rgba(37, 99, 235, 0.6);
+            transform: scale(1.05);
+        }
+
+        .noise-overlay {
+            position: fixed; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3BaseFilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/baseFilter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03; pointer-events: none; z-index: 1000;
+        }
+
+        .grid-pattern {
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            mask-image: radial-gradient(circle at center, black, transparent);
+            pointer-events: none;
+        }
+
+        /* Free Badge Animation */
+        .free-badge {
+            animation: pulse-gold 2s infinite;
+            background: linear-gradient(90deg, #fbbf24, #f59e0b, #fbbf24);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+        }
+        @keyframes pulse-gold {
+            0% { filter: drop-shadow(0 0 2px rgba(245, 158, 11, 0.2)); background-position: 0% center; }
+            50% { filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.6)); background-position: 100% center; }
+            100% { filter: drop-shadow(0 0 2px rgba(245, 158, 11, 0.2)); background-position: 0% center; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-float { padding: 6px; }
+            .nav-link { font-size: 0.65rem; padding: 6px 8px; }
+            .hidden-mobile { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars-container" id="starfield"></div>
+    <div class="noise-overlay"></div>
+    <div id="aura"></div>
+    <div class="nebula-bg">
+        <div class="nebula-glow" style="top: -10%; left: -10%;"></div>
+        <div class="nebula-glow" style="bottom: -10%; right: -10%; background: radial-gradient(circle, rgba(30, 64, 175, 0.08) 0%, transparent 70%);"></div>
+    </div>
+
+    <!-- Floating Navigation -->
+    <div class="nav-container">
+        <nav class="nav-float">
+            <div class="flex items-center gap-3 pl-4">
+                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-900/40">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                </div>
+                <span class="font-heading font-black text-xs tracking-tighter hidden-mobile">COSMIC 3.0</span>
+            </div>
+            
+            <div class="nav-links-wrapper overflow-x-auto no-scrollbar px-2 flex">
+                <span onclick="showPage('home')" class="nav-link active" data-page="home">Home</span>
+                <span onclick="showPage('vision')" class="nav-link" data-page="vision">Vision</span>
+                <span onclick="showPage('roadmap')" class="nav-link" data-page="roadmap">Roadmap</span>
+                <span onclick="showPage('nexus')" class="nav-link" data-page="nexus">Nexus</span>
+                <span onclick="showPage('features')" class="nav-link" data-page="features">Features</span>
+                <span onclick="showPage('pricing')" class="nav-link" data-page="pricing">Pricing</span>
+                <span onclick="showPage('about')" class="nav-link" data-page="about">About</span>
+            </div>
+
+            <div class="pr-2">
+                <button disabled class="opacity-50 cursor-not-allowed bg-slate-600 text-white px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-tight">Coming May 2026</button>
+            </div>
+        </nav>
+    </div>
+
+    <!-- HOME PAGE -->
+    <div id="home" class="page-view active">
+        <section class="min-h-screen flex flex-col items-center justify-center pt-24 px-6 text-center">
+            <div class="grid-pattern"></div>
+            <div class="mb-8 inline-flex items-center gap-2 bg-yellow-500/10 border border-yellow-500/30 px-4 py-1.5 rounded-full backdrop-blur-md">
+                <span class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></span>
+                <span class="text-[10px] font-bold text-yellow-400 uppercase tracking-widest">🚀 Under Development - Expected May 2026</span>
+            </div>
+            <h1 class="heading-xl text-6xl md:text-8xl lg:text-9xl font-bold mb-8 leading-none">
+                <span class="text-gradient">Unlimited</span><br/>Potential.
+            </h1>
+            <p class="max-w-2xl text-lg text-slate-400 mb-12">
+                The ultimate breakthrough is coming. Cosmic 3.0 is currently under development and scheduled for launch in May 2026. Zero cost. Infinite tokens. 12x the speed of previous generations. Revolutionary advancement in AI intelligence.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <button disabled class="opacity-50 cursor-not-allowed bg-slate-600 text-white px-8 py-3 rounded-full font-bold">Coming May 2026</button>
+                <button disabled class="opacity-50 cursor-not-allowed px-8 py-3 border border-white/10 rounded-full font-bold backdrop-blur-sm">Under Development</button>
+            </div>
+
+            <!-- Enhanced Stats -->
+            <div class="mt-24 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl w-full">
+                <div class="text-left p-6 border-l border-white/10 group hover:border-blue-500 transition-all">
+                    <div class="text-blue-500 font-mono text-[10px] mb-1 uppercase tracking-widest">Inference Latency</div>
+                    <div class="text-4xl font-bold">0.001ms</div>
+                    <div class="text-[10px] text-slate-500 mt-1">12x FASTER</div>
+                </div>
+                <div class="text-left p-6 border-l border-white/10 group hover:border-blue-500 transition-all">
+                    <div class="text-blue-500 font-mono text-[10px] mb-1 uppercase tracking-widest">Monthly Cost</div>
+                    <div class="text-4xl font-bold">$0.00</div>
+                    <div class="text-[10px] text-green-500 mt-1">FOREVER</div>
+                </div>
+                <div class="text-left p-6 border-l border-white/10 group hover:border-blue-500 transition-all">
+                    <div class="text-blue-500 font-mono text-[10px] mb-1 uppercase tracking-widest">Token Limit</div>
+                    <div class="text-4xl font-bold">∞</div>
+                    <div class="text-[10px] text-slate-500 mt-1">NO QUOTAS</div>
+                </div>
+                <div class="text-left p-6 border-l border-white/10 group hover:border-blue-500 transition-all">
+                    <div class="text-blue-500 font-mono text-[10px] mb-1 uppercase tracking-widest">Global Stability</div>
+                    <div class="text-4xl font-bold">99.99%</div>
+                    <div class="text-[10px] text-slate-500 mt-1">REAL-TIME</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ROADMAP PAGE -->
+    <div id="roadmap" class="page-view">
+        <section class="min-h-screen flex flex-col items-center justify-center pt-24 px-6 text-center">
+            <div class="max-w-3xl">
+                <div class="mb-8 inline-flex items-center gap-2 bg-yellow-500/10 border border-yellow-500/30 px-4 py-1.5 rounded-full backdrop-blur-md">
+                    <span class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></span>
+                    <span class="text-[10px] font-bold text-yellow-400 uppercase tracking-widest">🚀 Under Development</span>
+                </div>
+                
+                <h2 class="heading-xl text-5xl md:text-7xl font-bold mb-8 leading-tight">
+                    <span class="text-gradient">Cosmic 3.0</span><br/>Launching May 2026
+                </h2>
+                
+                <p class="text-lg text-slate-400 mb-12 leading-relaxed">
+                    All development efforts are focused on delivering Cosmic 3.0. Cosmic AI 2.0 remains in maintenance mode until the May 2026 release of version 3.0. 
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16">
+                    <div class="feature-card p-8 text-left">
+                        <div class="text-red-400 font-bold text-sm uppercase tracking-widest mb-4">⏸️ Maintenance Mode</div>
+                        <h3 class="text-2xl font-bold text-white mb-3">Cosmic AI 2.0</h3>
+                        <p class="text-slate-400 mb-4">Released November 28, 2025</p>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Cosmic AI 2.0 is in maintenance mode. All development resources have been redirected to Cosmic 3.0. We appreciate your support during this transition period.
+                        </p>
+                    </div>
+
+                    <div class="feature-card p-8 text-left relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-40 h-40 bg-cyan-500/10 blur-[80px]"></div>
+                        <div class="relative z-10">
+                            <div class="text-yellow-400 font-bold text-sm uppercase tracking-widest mb-4">⚙️ Under Development</div>
+                            <h3 class="text-2xl font-bold text-white mb-3">Cosmic AI 3.0</h3>
+                            <p class="text-slate-400 mb-4">Launching May 2026</p>
+                            <p class="text-slate-400 text-sm leading-relaxed">
+                                Revolutionary breakthrough with 12x performance, infinite context, and technological singularity. Expected to establish AI superintelligence as humanity's shared utility.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-20 p-8 bg-blue-600/10 border border-blue-500/20 rounded-3xl">
+                    <p class="text-white font-semibold mb-3">Projected Timeline</p>
+                    <div class="text-slate-400 text-sm space-y-2">
+                        <p>✓ January 2026: Closed testing and refinement</p>
+                        <p>✓ February - April 2026: Final development & optimization</p>
+                        <p>🚀 May 2026: Cosmic AI 3.0 Launch</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- VISION PAGE -->
+    <div id="vision" class="page-view">
+        <section class="container mx-auto px-6 pt-48 pb-20">
+            <h2 class="heading-xl text-4xl md:text-7xl mb-12">The <span class="text-blue-500">Democratized</span> <br/>Singularity.</h2>
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="space-y-8">
+                    <p class="text-xl text-slate-400 leading-relaxed">
+                        We promised it in 1.0, refined it in 2.0, and now in 3.0, we have achieved the post-scarcity intelligence model. Intelligence is no longer a luxury—it is a human right.
+                    </p>
+                    <div class="p-8 bg-blue-600/5 border border-blue-500/20 rounded-3xl backdrop-blur-xl">
+                        <h4 class="text-white font-bold mb-3 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                            Zero-Point Architecture
+                        </h4>
+                        <p class="text-slate-400 text-sm leading-relaxed">By utilizing decentralized idle compute across the Cosmic Nexus, we've eliminated operational overhead, allowing us to offer infinite scaling at zero cost to the end user.</p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="font-mono text-[10px] text-blue-500 mb-4 uppercase tracking-widest">Efficiency Breakthrough</div>
+                    <h3 class="text-2xl font-bold mb-4">12x Performance Multiplier</h3>
+                    <p class="text-slate-400 leading-relaxed">Our new 'Flash-Core' attention mechanism processes 12 times more data per clock cycle than the 2.0 architecture, resulting in instantaneous reasoning across all modalities.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- NEXUS PAGE -->
+    <div id="nexus" class="page-view">
+        <section class="container mx-auto px-6 pt-48 pb-20">
+            <div class="text-center mb-16">
+                <h2 class="heading-xl text-5xl mb-4">Live <span class="text-blue-500">Nexus</span> Status</h2>
+                <p class="text-slate-400">Monitoring the global decentralized grid.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="feature-card group">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 bg-blue-500/10 rounded-xl flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                        </div>
+                        <h4 class="font-bold">Distributed Nodes</h4>
+                    </div>
+                    <div class="text-3xl font-mono font-bold mb-2">1,248,392</div>
+                    <div class="font-mono text-[10px] text-green-500">GLOBAL MESH ONLINE</div>
+                </div>
+                <div class="feature-card group">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 bg-purple-500/10 rounded-xl flex items-center justify-center text-purple-500 group-hover:scale-110 transition-transform">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                        </div>
+                        <h4 class="font-bold">Throughput</h4>
+                    </div>
+                    <div class="text-3xl font-mono font-bold mb-2">12.4 PB/s</div>
+                    <div class="font-mono text-[10px] text-blue-400">NOMINAL SCALE</div>
+                </div>
+                <div class="feature-card group">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 bg-cyan-500/10 rounded-xl flex items-center justify-center text-cyan-500 group-hover:scale-110 transition-transform">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </div>
+                        <h4 class="font-bold">Security</h4>
+                    </div>
+                    <div class="text-3xl font-mono font-bold mb-2">Quantum-0</div>
+                    <div class="font-mono text-[10px] text-cyan-400">THREAT-LEVEL: ZERO</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- FEATURES PAGE -->
+    <div id="features" class="page-view">
+        <section class="container mx-auto px-6 pt-48 pb-20">
+            <div class="grid lg:grid-cols-2 gap-20 items-center">
+                <div>
+                    <h2 class="heading-xl text-5xl mb-8">God-Mode <br/><span class="text-blue-500">Standard.</span></h2>
+                    <div class="space-y-6">
+                        <div class="flex gap-4 p-6 hover:bg-white/5 rounded-2xl transition-all border border-transparent hover:border-white/10 group">
+                            <div class="w-12 h-12 rounded-full border border-blue-500/30 flex items-center justify-center text-blue-400 flex-shrink-0 group-hover:bg-blue-500 group-hover:text-white transition-colors">01</div>
+                            <div>
+                                <h4 class="font-bold text-lg">Recursive Logic 12x</h4>
+                                <p class="text-slate-400 text-sm">Reason through complex billion-line codebases in milliseconds with our parallelized thought-stream.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 p-6 hover:bg-white/5 rounded-2xl transition-all border border-transparent hover:border-white/10 group">
+                            <div class="w-12 h-12 rounded-full border border-blue-500/30 flex items-center justify-center text-blue-400 flex-shrink-0 group-hover:bg-blue-500 group-hover:text-white transition-colors">02</div>
+                            <div>
+                                <h4 class="font-bold text-lg">Omni-Context (Infinite)</h4>
+                                <p class="text-slate-400 text-sm">Upload every book ever written. Cosmic 3.0 maintains a permanent state across all your projects.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-slate-900/60 p-10 rounded-[32px] border border-white/10 relative overflow-hidden backdrop-blur-3xl shadow-2xl">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 blur-[100px]"></div>
+                    <div class="font-mono text-xs text-blue-400 mb-6 flex justify-between">
+                        <span>SYS_LOG: v3.0_RELEASE</span>
+                        <span class="animate-pulse">● LIVE</span>
+                    </div>
+                    <div class="space-y-4 font-mono text-sm">
+                        <p class="text-slate-500">> Initializing 12x performance engine...</p>
+                        <p class="text-slate-500">> Removing token constraints...</p>
+                        <p class="text-green-400">> Quota: UNLIMITED ENABLED</p>
+                        <p class="text-white">> Cosmic 3.0: "I am ready. What shall we build?"</p>
+                        <div class="mt-8 p-6 bg-blue-600/10 rounded-2xl border border-blue-500/20">
+                            <div class="text-xs text-blue-400 uppercase mb-2">Intelligence Stream</div>
+                            <div class="h-1 bg-white/5 rounded-full overflow-hidden">
+                                <div class="h-full bg-blue-500 w-[95%] animate-pulse"></div>
+                            </div>
+                            <div class="mt-2 text-[10px] text-slate-500 flex justify-between">
+                                <span>THROUGHPUT: MAX</span>
+                                <span>LATENCY: 0.001ms</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- PRICING PAGE (REIMAGINED: FREE FOREVER) -->
+    <div id="pricing" class="page-view">
+        <section class="container mx-auto px-6 pt-48 pb-20">
+            <div class="text-center mb-16">
+                <h2 class="heading-xl text-5xl md:text-7xl mb-4">Intelligence is <span class="free-badge">FREE.</span></h2>
+                <p class="text-slate-400 max-w-xl mx-auto">We promised this in version 1.0. We stood by it in 2.0. In 3.0, we've made it eternal. No tiers, no limits, no catches.</p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto">
+                <div class="feature-card pricing-card-premium text-center p-12 relative">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 px-6 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl">The Eternal Plan</div>
+                    
+                    <div class="mb-8">
+                        <div class="text-6xl md:text-8xl font-black mb-2">$0</div>
+                        <div class="text-blue-400 font-mono text-xs uppercase tracking-widest">Forever & Always</div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-8 text-left mb-12 border-y border-white/5 py-12">
+                        <ul class="space-y-5">
+                            <li class="flex items-center gap-3">
+                                <svg class="text-green-500" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+                                <span class="text-slate-200">Unlimited Tokens (No Caps)</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <svg class="text-green-500" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+                                <span class="text-slate-200">12x Performance Multiplier</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <svg class="text-green-500" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+                                <span class="text-slate-200">Infinite Context Windows</span>
+                            </li>
+                        </ul>
+                        <ul class="space-y-5">
+                            <li class="flex items-center gap-3">
+                                <svg class="text-green-500" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+                                <span class="text-slate-200">Full Multimodal Access</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <svg class="text-green-500" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+                                <span class="text-slate-200">Autonomous Agent Deployments</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <svg class="text-green-500" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+                                <span class="text-slate-200">Zero-Log Privacy Protocol</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <button disabled class="opacity-50 cursor-not-allowed bg-slate-600 text-white text-xl px-12 py-5 w-full md:w-auto rounded-full font-bold">
+                        Coming May 2026
+                    </button>
+                    
+                    <p class="mt-6 text-yellow-500 text-xs font-mono">🚀 Platform launches May 2026. All features will be available at launch.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ABOUT PAGE -->
+    <div id="about" class="page-view">
+        <section class="container mx-auto px-6 pt-48 pb-20">
+            <div class="max-w-4xl">
+                <h2 class="heading-xl text-5xl md:text-7xl mb-12">The <span class="text-blue-500">Foundation</span></h2>
+                <p class="text-slate-400 text-2xl leading-relaxed mb-12">
+                    Cosmic AI is a global decentralized collective. We believe the path to AGI must be open, free, and accessible to everyone simultaneously to ensure a fair and equitable future for all humanity.
+                </p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-12 mt-16">
+                    <div class="group">
+                        <div class="text-4xl font-bold mb-2 group-hover:text-blue-500 transition-colors">1.2M+</div>
+                        <div class="text-[10px] text-slate-500 font-mono uppercase tracking-widest">Active Nodes</div>
+                    </div>
+                    <div class="group">
+                        <div class="text-4xl font-bold mb-2 group-hover:text-blue-500 transition-colors">100%</div>
+                        <div class="text-[10px] text-slate-500 font-mono uppercase tracking-widest">Open Source</div>
+                    </div>
+                    <div class="group">
+                        <div class="text-4xl font-bold mb-2 group-hover:text-blue-500 transition-colors">0.0</div>
+                        <div class="text-[10px] text-slate-500 font-mono uppercase tracking-widest">VC Control</div>
+                    </div>
+                    <div class="group">
+                        <div class="text-4xl font-bold mb-2 group-hover:text-blue-500 transition-colors">∞</div>
+                        <div class="text-[10px] text-slate-500 font-mono uppercase tracking-widest">Lifespan</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Starfield Generator
+        const starfield = document.getElementById('starfield');
+        const starCount = 150;
+        
+        for (let i = 0; i < starCount; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 2 + 1;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.setProperty('--duration', `${Math.random() * 3 + 2}s`);
+            starfield.appendChild(star);
+        }
+
+        // Smooth Cursor Follower (Aura)
+        const aura = document.getElementById('aura');
+        let mouseX = 0, mouseY = 0;
+        let auraX = 0, auraY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function animateAura() {
+            const dx = mouseX - auraX;
+            const dy = mouseY - auraY;
+            auraX += dx * 0.1;
+            auraY += dy * 0.1;
+            aura.style.left = auraX + 'px';
+            aura.style.top = auraY + 'px';
+            requestAnimationFrame(animateAura);
+        }
+        animateAura();
+
+        // Page Routing Logic
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+            // Remove active from links
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            
+            // Show target page
+            const targetPage = document.getElementById(pageId);
+            if(targetPage) {
+                targetPage.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // Set link to active
+            const activeLink = document.querySelector(`.nav-link[data-page="${pageId}"]`);
+            if(activeLink) activeLink.classList.add('active');
+
+            // Pulse effect on aura
+            aura.style.width = '800px';
+            aura.style.height = '800px';
+            setTimeout(() => {
+                aura.style.width = '500px';
+                aura.style.height = '500px';
+            }, 400);
+        }
+
+        // Feature Card Hover 3D Effect
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const xc = rect.width / 2;
+                const yc = rect.height / 2;
+                const dx = x - xc;
+                const dy = y - yc;
+                card.style.transform = `translateY(-10px) rotateY(${dx / 20}deg) rotateX(${-dy / 20}deg)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0) rotateY(0) rotateX(0)';
+            });
+        });
+
+        // Initialize animations on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
